@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{22acb56e-1201-4b0e-b849-577093e202ea}") = "StartupOptimizer", "StartupOptimizer.csproj", "{c1354829-5924-4b36-be10-ff697cd00b5c}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{c1354829-5924-4b36-be10-ff697cd00b5c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{c1354829-5924-4b36-be10-ff697cd00b5c}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{c1354829-5924-4b36-be10-ff697cd00b5c}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{c1354829-5924-4b36-be10-ff697cd00b5c}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B6C602D-3EA8-4BE7-8F42-0C19E209AAD0}
+	EndGlobalSection
+EndGlobal

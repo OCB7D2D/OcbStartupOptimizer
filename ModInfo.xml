@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml>
+	<ModInfo>
+		<Name value="OcbStartupOptimizer" />
+		<Description value="Optimizes Unity Resources for faster startup (once)" />
+		<Website value="https://github.com/OCB7D2D/OcbStartupOptimizer" />
+		<Author value="ocbMaurice" />
+		<Version value="0.1.0" compat="A20"/>
+	</ModInfo>
+</xml>

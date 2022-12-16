@@ -12,6 +12,11 @@ Simply [download here from GitHub][2] and put into your A20 Mods folder:
 
 ### Version 0.1.0
 
+- Add support for Darkness Falls
+  Also checks `Assets` folders
+
+### Version 0.1.0
+
 - Initial version
 
 ## Compatibility

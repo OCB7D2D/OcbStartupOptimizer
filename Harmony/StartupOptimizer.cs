@@ -102,9 +102,14 @@ public class StartupOptimizer : IModApi
         int AssetCount = 0;
 
         foreach (Mod other in ModManager.GetLoadedMods())
+        {
             CollectOptimizationTasks(Path.Combine(
                 other.Path, "Resources"),
                 tasks, ref AssetCount);
+            CollectOptimizationTasks(Path.Combine(
+                other.Path, "Assets"),
+                tasks, ref AssetCount);
+        }
 
         if (tasks.Count == 0)
         {

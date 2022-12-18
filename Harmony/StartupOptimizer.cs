@@ -1,13 +1,11 @@
 ﻿using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using AssetsTools.NET.Extra.Decompressors.LZ4;
-using HarmonyLib;
 using SevenZip.Compression.LZMA;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
@@ -94,8 +92,6 @@ public class StartupOptimizer : IModApi
     public void InitMod(Mod mod)
     {
         Log.Out(" Loading Patch: " + GetType().ToString());
-        Harmony harmony = new Harmony(GetType().ToString());
-        harmony.PatchAll(Assembly.GetExecutingAssembly());
 
         List<Tuple<AssetBundleRecompressOperation, long>> tasks =
             new List<Tuple<AssetBundleRecompressOperation, long>>();

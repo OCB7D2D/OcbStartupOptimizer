@@ -1,14 +1,6 @@
-﻿using AssetsTools.NET;
-using AssetsTools.NET.Extra;
-using AssetsTools.NET.Extra.Decompressors.LZ4;
-using HarmonyLib;
-using SevenZip.Compression.LZMA;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Threading;
-using UnityEngine;
 
 public class StartupOptimizerCMD : ConsoleCmdAbstract
 {

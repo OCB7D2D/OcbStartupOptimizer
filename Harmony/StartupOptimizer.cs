@@ -5,6 +5,7 @@ using HarmonyLib;
 using SevenZip.Compression.LZMA;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -13,7 +14,7 @@ using UnityEngine;
 public class StartupOptimizer : IModApi
 {
 
-    private static bool FileIsAssetBundle(string path)
+    public static bool FileIsAssetBundle(string path)
     {
         try
         {
@@ -96,28 +97,29 @@ public class StartupOptimizer : IModApi
         Harmony harmony = new Harmony(GetType().ToString());
         harmony.PatchAll(Assembly.GetExecutingAssembly());
 
-        List<Tuple<AssetBundleRecompressOperation,long>> tasks =
+        List<Tuple<AssetBundleRecompressOperation, long>> tasks =
             new List<Tuple<AssetBundleRecompressOperation, long>>();
 
-        int AssetCount = 0;
+        List<string> bundles = GetAllAssetBundles();
 
-        foreach (Mod other in ModManager.GetLoadedMods())
+        if (bundles.Count == 0)
         {
-            CollectOptimizationTasks(Path.Combine(
-                other.Path, "Resources"),
-                tasks, ref AssetCount);
-            CollectOptimizationTasks(Path.Combine(
-                other.Path, "Assets"),
-                tasks, ref AssetCount);
-        }
-
-        if (tasks.Count == 0)
-        {
-            Log.Out("Found {0} optimized asset, all good!", AssetCount);
+            Log.Out("No asset bundles found, skip optimizer!");
             return;
         }
 
-        Log.Out("Start optimization of {0} bundles", tasks.Count);
+        CreateOptimizationTasks(bundles, tasks);
+
+        if (tasks.Count == 0)
+        {
+            Log.Out("Found {0} optimized asset bundle(s), all good!", bundles.Count);
+            return;
+        }
+
+        Log.Out("Start optimization of {0} asset bundle(s)", tasks.Count);
+
+        Stopwatch stopWatch = new Stopwatch();
+        stopWatch.Start();
 
         while (true)
         {
@@ -136,26 +138,61 @@ public class StartupOptimizer : IModApi
             Thread.Sleep(400);
         }
 
-        Log.Out("Optimization has finished");
+        stopWatch.Stop();
+
+        Log.Out("Optimization has finished in {0}s",
+            stopWatch.Elapsed.TotalSeconds);
+
+        Log.Warning("Original asset bundles are still there, just in case!");
+        Log.Warning("Once you verified everything is working, you may");
+        Log.Warning(" execute `optimizer cleanup` in the console");
 
         // Alternative to complete callback
         // foreach (var op in tasks) {}
 
-    }   
+    }
 
-    private void CollectOptimizationTasks(string path, List<Tuple<AssetBundleRecompressOperation, long>> ops, ref int AssetCount)
+    public static List<string> GetAllAssetBundles()
+    {
+        List<string> bundles = new List<string>();
+        foreach (Mod other in ModManager.GetLoadedMods())
+        {
+            CollectAssetBundles(Path.Combine(
+                other.Path, "Resources"),
+                bundles);
+            CollectAssetBundles(Path.Combine(
+                other.Path, "Assets"),
+                bundles);
+        }
+
+        return bundles;
+    }
+
+    public static void CollectAssetBundles(string path, List<string> bundles)
     {
         if (Directory.Exists(path) == false) return;
         foreach (var file in Directory.GetFiles(path))
         {
-            if (file.EndsWith(".tmp")) continue;
-            if (file.EndsWith(".org")) continue;
-            if (file.EndsWith(".bac")) continue;
-            if (file.EndsWith(".fast")) continue;
-            if (!FileIsAssetBundle(file)) continue;
             try
             {
-                AssetCount += 1;
+                if (file.EndsWith(".tmp")) continue;
+                if (file.EndsWith(".org")) continue;
+                if (file.EndsWith(".bac")) continue;
+                if (file.EndsWith(".fast")) continue;
+                if (!FileIsAssetBundle(file)) continue;
+                bundles.Add(file);
+            }
+            catch { }
+        }
+    }
+
+    private static void CreateOptimizationTasks( List<string> bundles,
+        List<Tuple<AssetBundleRecompressOperation, long>> ops)
+    {
+        foreach (var file in bundles)
+        {
+            try
+            {
                 AssetsManager assetsManager = new AssetsManager();
                 BundleFileInstance bundle = assetsManager.LoadBundleFile(file, false);
                 if (!ContainsLZMA(bundle.file)) continue;
@@ -186,32 +223,32 @@ public class StartupOptimizer : IModApi
                         Log.Error("Error optimizing {0}", task.Item1.inputPath);
                     }
                     else try
-                    {
-                        // Move original to backup, if it doesn't exists yet
-                        if (File.Exists(task.Item1.inputPath + ".org") == false)
                         {
-                            // Log.Out("Moving original to backup location");
-                            File.Move(task.Item1.inputPath, task.Item1.inputPath + ".org");
+                            // Move original to backup, if it doesn't exists yet
+                            if (File.Exists(task.Item1.inputPath + ".org") == false)
+                            {
+                                // Log.Out("Moving original to backup location");
+                                File.Move(task.Item1.inputPath, task.Item1.inputPath + ".org");
+                            }
+                            // Otherwise remove the compressed file
+                            else
+                            {
+                                // Log.Warning("Removing original resource");
+                                File.Delete(task.Item1.inputPath);
+                            }
+                            // Move the faster resource file in place now
+                            // Log.Out("Moving compressed file into place");
+                            File.Move(task.Item1.outputPath, task.Item1.inputPath);
+                            Log.Out("Optimized {0}", task.Item1.inputPath);
                         }
-                        // Otherwise remove the compressed file
-                        else
+                        catch (Exception ex)
                         {
-                            // Log.Warning("Removing original resource");
-                            File.Delete(task.Item1.inputPath);
+                            Log.Error("Error with {0}", task.Item1.inputPath);
+                            Log.Error("  result is {0}", task.Item1.result);
+                            if (File.Exists(task.Item1.outputPath))
+                                File.Delete(task.Item1.outputPath);
+                            Log.Error(ex.Message);
                         }
-                        // Move the faster resource file in place now
-                        // Log.Out("Moving compressed file into place");
-                        File.Move(task.Item1.outputPath, task.Item1.inputPath);
-                        Log.Out("Optimized {0}", task.Item1.inputPath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Error with {0}", task.Item1.inputPath);
-                        Log.Error("  result is {0}", task.Item1.result);
-                        if (File.Exists(task.Item1.outputPath))
-                            File.Delete(task.Item1.outputPath);
-                        Log.Error(ex.Message);
-                    }
                 };
                 ops.Add(task);
             }
@@ -221,7 +258,6 @@ public class StartupOptimizer : IModApi
                 Log.Error(ex.Message.ToString());
             }
         }
-
     }
 
 }

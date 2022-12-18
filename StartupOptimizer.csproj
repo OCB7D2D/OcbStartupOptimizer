@@ -97,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Harmony\StartupOptimizerCMD.cs" />
     <Compile Include="Harmony\StartupOptimizer.cs" />
     <Compile Include="Harmony\AssemblyInfo.cs" />
   </ItemGroup>

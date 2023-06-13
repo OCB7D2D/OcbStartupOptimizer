@@ -91,7 +91,7 @@ public class StartupOptimizer : IModApi
 
     public void InitMod(Mod mod)
     {
-        Log.Out(" Loading Patch: " + GetType().ToString());
+        Log.Out("OCB Startup Optimizer is loading");
 
         List<Tuple<AssetBundleRecompressOperation, long>> tasks =
             new List<Tuple<AssetBundleRecompressOperation, long>>();

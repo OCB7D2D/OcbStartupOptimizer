@@ -1,4 +1,4 @@
-# OCB Startup Optimizer - 7 Days to Die (A20) Addon
+# OCB Startup Optimizer - 7 Days to Die (A21) Addon
 
 This mod will re-compress any LZMA unity3d resource to use LZ4 compression for faster load times.
 The LZ4 format will probably use 20% to 80% more diskspace than LZMA compression.
@@ -30,6 +30,10 @@ Simply [download here from GitHub][2] and put into your A20 Mods folder:
 - https://github.com/OCB7D2D/OcbStartupOptimizer/archive/master.zip (master branch)
 
 ## Changelog
+
+### Version 1.0.0
+
+- Update compatibility for 7D2D A21.0(b313)
 
 ### Version 0.2.0
 

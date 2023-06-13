@@ -81,4 +81,16 @@ public class StartupOptimizerCMD : ConsoleCmdAbstract
         return string.Format("{0:n1}{1}", number, suffixes[counter]);
     }
 
+    protected override string[] getCommands()
+    {
+        return new string[] {
+            "cleanup"
+        };
+    }
+
+    protected override string getDescription()
+    {
+        return "Cleanup after OCB Startup Optimizer has ran";
+    }
+
 }

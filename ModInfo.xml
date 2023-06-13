@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xml>
-	<ModInfo>
-		<Name value="OcbStartupOptimizer" />
-		<Description value="Optimizes Unity Resource Asset Bundles in all mods once for faster startup" />
-		<Website value="https://github.com/OCB7D2D/OcbStartupOptimizer" />
-		<Author value="ocbMaurice" />
-		<Version value="0.2.0" compat="A20"/>
-	</ModInfo>
+	<Name value="OcbStartupOptimizer" />
+	<DisplayName value="OCB Startup Optimizer" />
+	<Description value="Optimizes Unity Resource Asset Bundles in all mods once for faster startup" />
+	<Website value="https://github.com/OCB7D2D/OcbStartupOptimizer" />
+	<Author value="ocbMaurice" />
+	<Version value="1.0.0" />
 </xml>

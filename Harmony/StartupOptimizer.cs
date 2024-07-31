@@ -151,7 +151,7 @@ public class StartupOptimizer : IModApi
     public static List<string> GetAllAssetBundles()
     {
         List<string> bundles = new List<string>();
-        foreach (Mod other in ModManager.GetLoadedMods())
+        foreach (Mod other in ModManager.loadedMods.list)
         {
             CollectAssetBundles(Path.Combine(
                 other.Path, "Resources"),

@@ -33,6 +33,10 @@ Only clone or download the repo if you know what you do!
 
 ## Changelog
 
+### Version 1.1.1
+
+- Fix compatibility with OCB Inventory Mouse Wheel
+
 ### Version 1.1.0
 
 - First compatibility with V1.0 (exp)
